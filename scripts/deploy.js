@@ -23,6 +23,8 @@ async function main() {
   await presale.deployed();
   console.log("Presale contract deployed at: " + presale.address);
 
+  // After deployments, you need to send tokens to the Presale contract.
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere

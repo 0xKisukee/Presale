@@ -5,6 +5,8 @@
     "hardhat": "^2.12.6"
   },
   "dependencies": {
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.3.9",
     "require-text": "^0.0.1"
   }
 }
