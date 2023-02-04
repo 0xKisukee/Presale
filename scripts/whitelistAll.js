@@ -8,13 +8,18 @@ const requireText = require('require-text');
 
 async function main() {
 
+  const strAddresses = requireText("./sources/whitelist.txt", require);
+  const addresses = strAddresses.split(/\r?\n/g);
+
   // Setup Presale
   const presaleAddress = requireText("./sources/presaleAddress.txt", require);
   const presale = await ethers.getContractAt("contracts/Presale.sol:Presale", presaleAddress);
 
-  console.log(await presale.whitelisted("0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"));
-  await presale.whitelist("0xa513e6e4b8f2a923d98304ec87f64353c4d5c853");
-  console.log(await presale.whitelisted("0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"));
+  // Whitelist users
+  for (let i = 0; i < addresses.length; i++) {
+    await presale.whitelist(addresses[i]);
+    console.log("Whitelisted: " + addresses[i]);
+  }
 
 }
 
