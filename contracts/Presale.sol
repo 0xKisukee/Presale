@@ -4,7 +4,8 @@ pragma solidity ^0.8.17;
 import "./sources/IERC20.sol";
 
 contract Presale {
-    uint public tokenPrice;
+    uint public publicPrice;
+    uint public privatePrice;
     uint public maxAlloc;
 
     address public owner;
@@ -23,7 +24,8 @@ contract Presale {
         address _usdc
     ) {
         owner = msg.sender;
-        tokenPrice = _tokenPrice;
+        publicPrice = _publicPrice;
+        privatePrice = _privatePrice;
         maxAlloc = _maxAlloc;
         token = _token;
         usdc = _usdc;
@@ -35,7 +37,7 @@ contract Presale {
             alloc[msg.sender] + _tokenAmount <= maxAlloc,
             "Max alloc reached"
         );
-        uint price = _tokenAmount * tokenPrice;
+        uint price = _tokenAmount * publicPrice;
         IERC20(usdc).transferFrom(msg.sender, address(this), price);
         alloc[msg.sender] += _tokenAmount;
     }
@@ -46,7 +48,7 @@ contract Presale {
             alloc[msg.sender] + _tokenAmount <= maxAlloc,
             "Max alloc reached"
         );
-        uint price = _tokenAmount * tokenPrice;
+        uint price = _tokenAmount * privatePrice;
         IERC20(usdc).transferFrom(msg.sender, address(this), price);
         alloc[msg.sender] += _tokenAmount;
     }
