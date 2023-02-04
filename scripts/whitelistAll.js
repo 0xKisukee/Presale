@@ -8,20 +8,13 @@ const requireText = require('require-text');
 
 async function main() {
 
-  const Token = await ethers.getContractFactory("Token");
-  const token = await Token.deploy();
-  await token.deployed();
-  console.log("Token contract deployed at: " + token.address);
+  // Setup Presale
+  const presaleAddress = requireText("./sources/presaleAddress.txt", require);
+  const presale = await ethers.getContractAt("contracts/Presale.sol:Presale", presaleAddress);
 
-  const USDC = await ethers.getContractFactory("USDC");
-  const usdc = await USDC.deploy();
-  await usdc.deployed();
-  console.log("USDC contract deployed at: " + usdc.address);
-
-  const Presale = await ethers.getContractFactory("Presale");
-  const presale = await Presale.deploy(11, 10, 1000, token.address, usdc.address);
-  await presale.deployed();
-  console.log("Presale contract deployed at: " + presale.address);
+  console.log(await presale.whitelisted("0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"));
+  await presale.whitelist("0xa513e6e4b8f2a923d98304ec87f64353c4d5c853");
+  console.log(await presale.whitelisted("0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"));
 
 }
 

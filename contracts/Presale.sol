@@ -18,7 +18,8 @@ contract Presale {
     mapping(address => uint) public alloc;
 
     constructor(
-        uint _tokenPrice,
+        uint _publicPrice,
+        uint _privatePrice,
         uint _maxAlloc,
         address _token,
         address _usdc
