@@ -6,7 +6,7 @@ import "./sources/MerkleProof.sol";
 
 contract Presale {
     bytes32 public merkleRoot =
-        0x527eb783f2cd30e8440dd531310954142f9af00d860f09a1dcae4b0be4bd4d3d;
+        0x5e79639e99a5d70ef3e3eed2007297a5afd4dd927af46758d4ca84a6be853b65;
 
     uint public publicPrice;
     uint public privatePrice;
@@ -14,11 +14,10 @@ contract Presale {
 
     address public owner;
     address public token;
-    address public usdc;
+    address public stable;
 
     bool public presaleIsOpen;
 
-    mapping(address => bool) public whitelisted;
     mapping(address => uint) public alloc;
 
     constructor(
@@ -26,14 +25,14 @@ contract Presale {
         uint _privatePrice,
         uint _maxAlloc,
         address _token,
-        address _usdc
+        address _stable
     ) {
         owner = msg.sender;
         publicPrice = _publicPrice;
         privatePrice = _privatePrice;
         maxAlloc = _maxAlloc;
         token = _token;
-        usdc = _usdc;
+        stable = _stable;
     }
 
     function enterPublic(uint _tokenAmount) public {
@@ -45,14 +44,14 @@ contract Presale {
         );
 
         uint price = _tokenAmount * publicPrice;
-        IERC20(usdc).transferFrom(msg.sender, address(this), price);
+        IERC20(stable).transferFrom(msg.sender, address(this), price);
         alloc[msg.sender] += _tokenAmount;
     }
 
     function enterPrivate(
         uint _tokenAmount,
         bytes32[] calldata _merkleProof
-    ) public onlyWhitelisted {
+    ) public {
         require(_tokenAmount > 0, "Wrong value");
         require(presaleIsOpen == true, "Presale is closed");
         require(
@@ -67,7 +66,7 @@ contract Presale {
         );
 
         uint price = _tokenAmount * privatePrice;
-        IERC20(usdc).transferFrom(msg.sender, address(this), price);
+        IERC20(stable).transferFrom(msg.sender, address(this), price);
         alloc[msg.sender] += _tokenAmount;
     }
 
@@ -76,10 +75,6 @@ contract Presale {
         require(alloc[msg.sender] > 0, "Nothing to claim");
         IERC20(token).transfer(msg.sender, alloc[msg.sender]);
         alloc[msg.sender] = 0;
-    }
-
-    function whitelist(address _user) public onlyOwner {
-        whitelisted[_user] = true;
     }
 
     function openPresale() public onlyOwner {
@@ -92,11 +87,6 @@ contract Presale {
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Caller is not owner");
-        _;
-    }
-
-    modifier onlyWhitelisted() {
-        require(whitelisted[msg.sender] == true, "Caller is not whitelisted");
         _;
     }
 }

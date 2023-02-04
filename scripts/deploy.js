@@ -8,22 +8,21 @@ const requireText = require('require-text');
 
 async function main() {
 
-  const Token = await ethers.getContractFactory("Token");
-  const token = await Token.deploy();
-  await token.deployed();
-  console.log("Token contract deployed at: " + token.address);
+  // Set these variables before deployement
+  const publicPrice = 11;
+  const privatePrice = 10;
+  const maxAlloc = 1000;
+  const tokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+  const stableAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
-  const USDC = await ethers.getContractFactory("USDC");
-  const usdc = await USDC.deploy();
-  await usdc.deployed();
-  console.log("USDC contract deployed at: " + usdc.address);
-
+  // Presale deployment
   const Presale = await ethers.getContractFactory("Presale");
-  const presale = await Presale.deploy(11, 10, 1000, token.address, usdc.address);
+  const presale = await Presale.deploy(publicPrice, privatePrice, maxAlloc, tokenAddress, stableAddress);
   await presale.deployed();
   console.log("Presale contract deployed at: " + presale.address);
 
-  // After deployments, you need to send tokens to the Presale contract.
+  // After deployment, you need to send enough tokens to the Presale contract,
+  // or users won't be able to claim their allocation.
 
 }
 
